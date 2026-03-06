@@ -1,0 +1,94 @@
+---
+version: v1
+name: wf-customer-purchase-summary
+type: workflow
+tags:
+  - crm
+description: Generate customer-level purchase summary metrics.
+workflow:
+  dag:
+    - name: dg-customer-purchase-summary
+      description: Builds customer purchase metrics including spend, frequency, channel preference, and deal dependency.
+      spec:
+        tags:
+          - crm
+        stack: flare:6.0
+        compute: runnable-default
+        stackSpec:
+          driver:
+            coreLimit: 2000m
+            cores: 1
+            memory: 1000m
+          executor:
+            coreLimit: 2000m
+            cores: 1
+            instances: 1
+            memory: 2000m
+          job:
+            explain: true
+            logLevel: INFO
+            inputs:
+              - name: purchase_data
+                dataset: dataos://icebase:training/purchase_data?acl=rw
+                format: iceberg
+
+            steps:
+              - sequence:
+                  - name: customer_purchase_summary_mkr
+                    sql: >
+                      SELECT
+                        customer_id,
+
+                        COALESCE(mntwines, 0)
+                      + COALESCE(mntmeatproducts, 0)
+                      + COALESCE(mntfishproducts, 0)
+                      + COALESCE(mntsweetproducts, 0)
+                      + COALESCE(mntgoldprods, 0)
+                      + COALESCE(mntfruits, 0) AS total_spend_across_categories,
+
+                        /* Total purchases across all channels */
+                        COALESCE(numdealspurchases, 0)
+                      + COALESCE(numwebpurchases, 0)
+                      + COALESCE(numcatalogpurchases, 0)
+                      + COALESCE(numstorepurchases, 0) AS total_purchases,
+
+                  
+                        CASE
+                          WHEN COALESCE(numwebpurchases, 0) >= COALESCE(numstorepurchases, 0)
+                           AND COALESCE(numwebpurchases, 0) >= COALESCE(numcatalogpurchases, 0)
+                            THEN 'Web'
+                          WHEN COALESCE(numstorepurchases, 0) >= COALESCE(numcatalogpurchases, 0)
+                            THEN 'Store'
+                          ELSE 'Catalog'
+                        END AS preferred_channel,
+
+                        
+                        CASE
+                          WHEN (
+                              COALESCE(numdealspurchases, 0)
+                            + COALESCE(numwebpurchases, 0)
+                            + COALESCE(numcatalogpurchases, 0)
+                            + COALESCE(numstorepurchases, 0)
+                          ) > 0
+                          THEN COALESCE(numdealspurchases, 0) * 1.0 /
+                               (
+                                 COALESCE(numdealspurchases, 0)
+                               + COALESCE(numwebpurchases, 0)
+                               + COALESCE(numcatalogpurchases, 0)
+                               + COALESCE(numstorepurchases, 0)
+                               )
+                          ELSE 0
+                        END AS deal_dependency_ratio
+
+                      FROM purchase_data
+
+            outputs:
+              - name: customer_purchase_summary_mkr
+                dataset: dataos://icebase:training/customer_purchase_summary_table?acl=rw
+                format: Iceberg
+                options:
+                  saveMode: overwrite
+                  iceberg:
+                    properties:
+                      write.format.default: parquet
+                      write.metadata.compression-codec: gzip

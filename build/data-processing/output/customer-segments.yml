@@ -1,0 +1,76 @@
+---
+version: v1
+name: wf-customer-segments
+type: workflow
+tags:
+  - crm
+description: Segment customers based on purchase behavior and value metrics.
+workflow:
+  dag:
+    - name: dg-customer-segments
+      description: Classifies customers into actionable segments using purchase summary metrics.
+      spec:
+        tags:
+          - crm
+        stack: flare:6.0
+        compute: runnable-default
+        stackSpec:
+          driver:
+            coreLimit: 2000m
+            cores: 1
+            memory: 1000m
+          executor:
+            coreLimit: 2000m
+            cores: 1
+            instances: 1
+            memory: 2000m
+          job:
+            explain: true
+            logLevel: INFO
+            inputs:
+              - name: customer_purchase_summary_table
+                dataset: dataos://icebase:training/customer_purchase_summary_table?acl=rw
+                format: iceberg
+
+            steps:
+              - sequence:
+                  - name: customer_segments_mkr
+                    sql: >
+                      SELECT
+                        customer_id,
+
+                        CASE
+                          WHEN total_spend_across_categories >= 2000
+                               AND total_purchases >= 10
+                            THEN 'High Value - Loyal'
+
+                          WHEN total_spend_across_categories >= 2000
+                               AND total_purchases < 5
+                            THEN 'High Value - Infrequent'
+
+                          WHEN deal_dependency_ratio >= 0.5
+                            THEN 'Discount Sensitive'
+
+                          WHEN preferred_channel = 'Web'
+                               AND total_purchases <= 3
+                            THEN 'Digital Browser'
+
+                          WHEN total_spend_across_categories < 500
+                               AND total_purchases <= 2
+                            THEN 'Low Value - Infrequent'
+
+                          ELSE 'Regular Customers'
+                        END AS segment_name
+
+                      FROM customer_purchase_summary_table
+
+            outputs:
+              - name: customer_segments_mkr
+                dataset: dataos://icebase:training/customer_segments_table?acl=rw
+                format: Iceberg
+                options:
+                  saveMode: overwrite
+                  iceberg:
+                    properties:
+                      write.format.default: parquet
+                      write.metadata.compression-codec: gzip

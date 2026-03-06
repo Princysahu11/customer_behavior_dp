@@ -1,0 +1,34 @@
+views:
+  - name: customer_purchase_mkr
+    description: >
+      A simple analytical view to support customer segmentation and
+      engagement analysis.
+    public: true
+    meta:
+      title: Customer Purchase Summary
+      tags:
+        - DPDomain.Marketing
+        - DPUsecase.Customer Segmentation
+        - DPUsecase.Customer behavior
+        - DPTier.Consumer Aligned
+      metric:
+        expression: "*/45  * * * *"
+        timezone: "UTC"
+        window: "day"
+        excludes: 
+         - purchases
+    tables:
+      - join_path: customer
+        prefix: true
+        includes:
+          - customer_id
+          - country
+      - join_path: purchase
+        prefix: true
+        includes:
+          - purchase_data
+          - total_purchases
+          - purchases
+      
+
+      

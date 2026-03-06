@@ -1,0 +1,63 @@
+tables:
+  - name: customer
+    sql: {{ load_sql('customer') }}
+    description: "This table stores key details about the customers, including their personal information, income, and classification into different risk segments. It serves as the central reference point for customer-related insights."
+    public: true
+  
+    dimensions:   
+      - name: customer_id
+        type: number
+        column: customer_id
+        description: "The unique identifier for each customer."
+        primary_key: true
+        public: true
+
+
+      - name: birth_year
+        type: number
+        column: birth_year
+        description: "The birth year of the customer, used for demographic analysis and customer segmentation."
+
+      - name: education
+        type: string
+        column: education
+        description: "The educational level of the customer, which could be used for profiling and targeted campaigns."
+
+      - name: marital_status
+        type: string
+        column: marital_status
+        description: "The marital status of the customer, which may provide insights into purchasing behavior and lifestyle preferences."
+
+      - name: income
+        type: number
+        column: income
+        description: "The annual income of the customer in the local currency, which is often a key factor in market segmentation and purchasing power analysis."
+
+      - name: country
+        type: string
+        column: country
+        description: "The country where the customer resides, providing geographic segmentation and analysis opportunities."
+
+    measures:
+      - name: total_customers
+        sql: "COUNT( Distinct {customer_id})"
+        type: number
+        description: "The total number of customers in the dataset, used as a basic measure of customer volume."
+
+      - name: avg_customer_income
+        sql: "AVG({income})"
+        type: number
+        description: "The average annual income of customers, used to understand purchasing power across customer segments and geographies."
+
+    segments:
+      - name: country_india
+        sql: country = 'India'
+        description: This segment filters customers by a specific country India.
+        meta:
+          secure:
+            user_groups:
+              includes:
+                - india
+              excludes: 
+                - default
+

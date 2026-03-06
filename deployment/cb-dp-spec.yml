@@ -1,0 +1,54 @@
+name: customerbehavior-mkr
+version: v1beta
+entity: product
+type: data
+tags:
+  - DPDomain.Marketing
+  - DPUsecase.Customer Segmentation
+  - DPUsecase.Customer behavior 
+  - DPTier.Consumer Aligned
+description: This data product focuses on understanding customer behavior and customer segments.
+refs:
+  - title: 'Workspace Info'
+    href: https://dataos.info/interfaces/cli/command_reference/#workspace
+
+v1beta:
+  data:
+    meta:
+      title: Customer Behavior
+      sourceCodeUrl: https://github.com/Acies-Manoj/customer-behavior-dp
+ 
+    collaborators:
+      - name: vigneshadhikesavan
+        description: owner
+    
+    resource:
+      refType: dataos
+      ref: bundle:v1beta:customerbehavior-bundle
+
+    inputs:
+      - refType: dataos
+        ref: dataset:icebase:training:customer_data
+
+      - refType: dataos
+        ref: dataset:icebase:training:purchase_data
+
+
+    outputs:
+      - refType: dataos
+        ref: dataset:icebase:training:customer_purchase_summary_table
+
+      - refType: dataos
+        ref: dataset:icebase:training:customer_segments_table
+
+    ports:
+      lens:
+        ref: lens:v1alpha:customerbehavior:public
+        refType: dataos
+
+      # talos:
+      #   - ref: service:v1:product-affinity-api:public
+      #     refType: dataos
+
+
+      

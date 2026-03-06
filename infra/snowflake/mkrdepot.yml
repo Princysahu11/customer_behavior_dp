@@ -1,0 +1,27 @@
+name: mkrsample
+version: v2alpha
+type: depot
+tags:
+  - Snowflake depot
+  - user data
+layer: user
+depot:
+  name: mkrsample
+  type: snowflake
+  description: Depot to fetch data from Snowflake datasource
+  secrets:
+    - name: mkrsample-r
+      keys:
+        - mkrsample-r
+      allKeys: true
+    - name: mkrsample-rw
+      keys:
+        - mkrsample-rw
+      allKeys: true
+  external: true
+  snowflake:
+    database: TMDC_V1
+    url: abcd-mp48932.snowflakecomputing.com 
+    warehouse: COMPUTE_WH
+    account: abcd-mp48932
+  source: mkrsample
