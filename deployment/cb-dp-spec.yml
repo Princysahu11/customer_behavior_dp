@@ -1,4 +1,4 @@
-name: customerbehavior-mkr
+name: customerbehavior-ps
 version: v1beta
 entity: product
 type: data
@@ -15,16 +15,16 @@ refs:
 v1beta:
   data:
     meta:
-      title: Customer Behavior
-      sourceCodeUrl: https://github.com/Acies-Manoj/customer-behavior-dp
+      title: Customer Behavior Analysis
+      sourceCodeUrl: https://github.com/Princysahu11/customer_behavior_dp
  
     collaborators:
-      - name: vigneshadhikesavan
+      - name: princysahu
         description: owner
     
     resource:
       refType: dataos
-      ref: bundle:v1beta:customerbehavior-bundle
+      ref: bundle:v1beta:customerbehavior-bundle-ps
 
     inputs:
       - refType: dataos

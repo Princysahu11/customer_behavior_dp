@@ -1,4 +1,4 @@
-name: customerbehavior-bundle
+name: customerbehavior-bundle-ps
 version: v1beta
 type: bundle
 tags:
@@ -8,8 +8,9 @@ layer: "user"
 bundle:
   resources:
     - id: lens
-      file: C:\Users\Manoj\Desktop\customer-behavior-training\build\semantic-model\deployment.yml
+      file: /home/princysahu/Desktop/dataproducts/customer_behavior_dp/build/semantic-model/deployment.yml
+      #C:\Users\Manoj\Desktop\customer-behavior-training\build\semantic-model\deployment.yml
       workspace: public
-    - id: quality_purchase
-      file: C:\Users\Manoj\Desktop\customer-behavior-training\deployment\cb-deploy-bundle.yml
-      workspace: public
+    # - id: quality_purchase
+    #   file: C:\Users\Manoj\Desktop\customer-behavior-training\deployment\cb-deploy-bundle.yml
+    #   workspace: public

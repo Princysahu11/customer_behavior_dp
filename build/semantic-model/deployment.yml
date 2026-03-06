@@ -1,5 +1,5 @@
 version: v1alpha
-name: "customerbehavior"
+name: "customerbehavior-ps"
 layer: user
 type: lens
 tags:
@@ -7,16 +7,16 @@ tags:
 description: This semantic model provides comprehensive insights for customer behavior analysis.
 lens:
   compute: runnable-default
-  secrets:
-    - name: cb-github-cred
-      allKeys: true
+  # secrets:
+  #   - name: cb-github-cred
+  #     allKeys: true
   source:
     type: minerva
     name: miniature
     catalog: icebase
   repo:
-    url: https://github.com/Acies-Manoj/customer-behavior-dp
-    lensBaseDir: customer-behavior-dp/build/semantic-model/model
+    url: https://github.com/Princysahu11/customer_behavior_dp
+    lensBaseDir: Customer_Behavior_DP/build/semantic-model/model
     syncFlags:
       - --ref=main
 

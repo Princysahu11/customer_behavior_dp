@@ -1,6 +1,6 @@
 ---
 version: v1
-name: wf-customer-purchase-summary
+name: wf-customer-purchase-summary-ps
 type: workflow
 tags:
   - crm
@@ -34,7 +34,7 @@ workflow:
 
             steps:
               - sequence:
-                  - name: customer_purchase_summary_mkr
+                  - name: customer_purchase_summary_ps
                     sql: >
                       SELECT
                         customer_id,
@@ -83,7 +83,7 @@ workflow:
                       FROM purchase_data
 
             outputs:
-              - name: customer_purchase_summary_mkr
+              - name: customer_purchase_summary_ps
                 dataset: dataos://icebase:training/customer_purchase_summary_table?acl=rw
                 format: Iceberg
                 options:

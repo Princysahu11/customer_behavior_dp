@@ -1,5 +1,5 @@
 version: v1
-name: scan-data-product-mkr
+name: scan-data-product-ps
 type: workflow
 tags:
   - scanner
@@ -7,7 +7,7 @@ tags:
 description: The job scans data product from poros
 workflow:
   dag:
-    - name: scan-data-product-job-mkr
+    - name: scan-data-product-job-ps
       description: The job scans data-product from poros and register data to metis
       spec:
         tags:
@@ -22,7 +22,7 @@ workflow:
               markDeletedDataProducts: true
               dataProductFilterPattern:
                 includes:
-                 - customerbehavior-mkr
+                 - customerbehavior-ps
 
                 
                   

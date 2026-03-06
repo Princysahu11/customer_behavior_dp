@@ -1,6 +1,6 @@
 ---
 version: v1
-name: wf-customer-segments
+name: wf-customer-segments-ps
 type: workflow
 tags:
   - crm
@@ -34,7 +34,7 @@ workflow:
 
             steps:
               - sequence:
-                  - name: customer_segments_mkr
+                  - name: customer_segments_ps
                     sql: >
                       SELECT
                         customer_id,
@@ -65,7 +65,7 @@ workflow:
                       FROM customer_purchase_summary_table
 
             outputs:
-              - name: customer_segments_mkr
+              - name: customer_segments_ps
                 dataset: dataos://icebase:training/customer_segments_table?acl=rw
                 format: Iceberg
                 options:
