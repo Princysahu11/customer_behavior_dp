@@ -16,7 +16,7 @@ lens:
     catalog: icebase
   repo:
     url: https://github.com/Princysahu11/customer_behavior_dp
-    lensBaseDir: Customer_Behavior_DP/build/semantic-model/model
+    lensBaseDir: customer_behavior_dp/build/semantic-model/model
     syncFlags:
       - --ref=main
 
